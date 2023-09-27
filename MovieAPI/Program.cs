@@ -3,7 +3,11 @@ using MovieAPI.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 
-
+builder.Services.AddCors(p=> p.AddPolicy("corsapp", builder =>
+{
+    builder.WithOrigins("*")
+    .AllowAnyMethod().AllowAnyHeader();
+}));
 
 builder.Services.AddDbContext<MovieAPIContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("MovieAPIContext")));
@@ -17,6 +21,8 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
+
+app.UseCors("corsapp");
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
